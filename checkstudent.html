@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Check Student</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #b388eb, #f7d1ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        input[type="number"] {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            background-color: #f4e1ff;
+            color: #5e2b97;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: #7e57c2;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #5e35b1;
+        }
+
+        .loader {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #7e57c2;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #Studentdatawithroll {
+            margin-top: 25px;
+            background: #ffffffcc;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            color: #4a148c;
+        }
+
+        #Studentdatawithroll h1,
+        #Studentdatawithroll h2 {
+            margin-bottom: 10px;
+        }
+
+        #Studentdatawithroll p {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 500px) {
+
+            input[type="number"],
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div class="loader" id="loader"></div>
+
+    <input type="number" id="roll" placeholder="Enter a Roll Number">
+    <button onclick="stdcheck()" id="check">Check</button>
+
+    <div id="Studentdatawithroll"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(to left, #924DBF, #9C70C0);
+    display: flex;
+    justify-content: center;
+    align-items: center !important;
+    /* border: 1px solid red; */
+    height: 100vh !important;
+    /* width: 100%; */
+}
+
+#info {
+    background-color: #BD98FB;
+    /* margin-left: 32%; */
+    /* margin-top: 18%; */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.498);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+#info h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#info button {
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    background-color: #4B2574;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#info button:hover {
+    background-color: #924DBF;
+    transition: all 0.6s ease-in-out;
+}
+
+
+@media (min-width: 600px) {
+    #info {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    button {
+        width: 48%;
+    }
+}
+
+#adminlogin {
+    display: none;
+    /* margin-top: 17%; */
+    /* margin-left: 30%; */
+}
+
+#adminlogin input {
+    padding: 10px;
+    height: 12vh;
+    width: 30vw;
+    border-radius: 15px;
+    font-size: 4vh;
+    outline: none;
+    border: 2px solid #10032A;
+}
+
+#adminlogin button {
+    padding: 5px;
+    width: 6vw;
+    margin-left: 10px;
+    font-size: 16px;
+    border: 2px solid #10032A;
+    border-radius: 15px;
+    background-color: #4B2574;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#studentLogin {
+    /* margin-left: 35vw; */
+    background-color: #4B2574;
+    height: 75vh;
+    color: white;
+    /* margin-top: 10vh; */
+    font-size: 3.5vh;
+    width: 30vw;
+    box-shadow: 0 8px 20px rgba(234, 120, 234, 0.977);
+    /* border: 1px solid #10032A; */
+    padding: 20px;
+    border-radius: 20px;
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    /* align-items: center; */
+}
+
+#address {
+    height: 10vh;
+    padding: 10px;
+    outline: none;
+    width: 12.5vw;
+    border-radius: 10px;
+    float: right;
+}
+
+#gender {
+    text-align: center;
+    outline: none;
+    height: 5vh !important;
+    border-radius: 10px;
+    padding: 5px;
+    color: black !important;
+}
+
+#studentLogin input {
+    height: 5vh;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    padding: 10px;
+    float: right;
+    /* width: 10vw; */
+}
+
+#addStudent {
+    height: 6vh;
+    width: 95%;
+    background-color: #924DBF;
+    color: white;
+    font-weight: bold;
+    margin-left: 2.5%;
+    border-radius: 10px;
+    border: none;
+}
+
+
+
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    padding: 8px;
+    position: absolute;
+    z-index: 9999;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #4B2574;
+    display: none;
+    --_m:
+        conic-gradient(#0000 10%, #000),
+        linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    -webkit-mask-composite: source-out;
+    mask-composite: subtract;
+    animation: l3 1s infinite linear;
+}
+
+@keyframes l3 {
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+
+#roll {
+    font-size: 4.5vh;
+    height: 15vh;
+    padding: 20px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+#check {
+
+    height: 15vh;
+    padding: 10px;
+    width: 6vw;
+    background-color: #4B2574;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+
+}
+
+#body {
+    /* justify-content: space-evenly; */
+    gap: 10px;
+}
+
+#check:hover {
+    background-color: #924DBF;
+    transition: all 0.6s ease-in-out;
+}
+
+#Studentdatawithroll{
+    
+}

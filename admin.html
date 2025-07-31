@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        button {
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #4B2574;
+            color: white;
+            cursor: pointer;
+            width: 20%;
+
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #7631a4;
+            transition: all 0.6s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+
+    <button onclick="CheckStudent()">Check Students</button>
+    <button onclick="adminlogout()">Log Out</button>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+    <script>
+        let token = localStorage.getItem('authToken')
+        if (!token) {
+            window.location.href = `index.html`
+        }
+        function CheckStudent() {
+            window.location.href = `StudentsData.html`
+        }
+    </script>
+</body>
+
+</html>

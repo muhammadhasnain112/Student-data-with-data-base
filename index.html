@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="loader" id="loader"></div>
+    <div id="info">
+        <button onclick="addStudent()">Add Student</button>
+        <button onclick="adminLogin()">Admin Login</button>
+        <button onclick="checkstudents()">Check All Students</button>
+        <button onclick="checkstudentwithrollnum()">Check Student With Roll Number</button>
+    </div>
+
+    <div id="adminlogin">
+        <input type="number" placeholder="Enter Secret Code" id="adminlogininput"><button id="login">Login</button>
+    </div>
+
+    <div id="studentLogin">
+        <label for="name">
+            Name <input type="text" id="name" required>
+        </label>
+        <label for="Father Name">
+            Father Name <input type="text" id="f-name" required>
+        </label>
+        <label for="Mobile Number">
+            Mobile Number <input type="number" id="m-number" required>
+        </label>
+
+        <label for="age">
+            Age <input type="number" id="age" required>
+        </label>
+        <label for="lastQualfication">
+            Last Qualfication <input type="text" id="Qualfication" required>
+        </label>
+        <select name="" id="gender">
+            <option value="" selected disabled>Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <label for="address">
+            Address<textarea name="address" id="address" required></textarea>
+        </label>
+        <button id="addStudent">Add</button>
+    </div>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
