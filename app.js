@@ -133,17 +133,19 @@ async function stdcheck() {
         .from('Students')
         .select('*')
         .eq('RollNumber', Roll.value)
-    // Roll.style.display = 'block'
-    // check.style.display = 'block'
     loader.style.display = `none`
     if (error) {
         alert(error.message)
     } else {
-        console.log(data[0]);
-        Roll.style.display = 'none'
-        check.style.display = 'none'
-        StudentDataWithRoll.innerHTML = `
-        <h1>Name : ${data[0].name}</h1>
+        console.log(data.length);
+
+
+        if (!data.length == 0) {
+            console.log(data[0]);
+            Roll.style.display = 'none'
+            check.style.display = 'none'
+            StudentDataWithRoll.innerHTML = `
+            <h1>Name : ${data[0].name}</h1>
         <h2>Father Name : ${data[0].fatherName}</h2>
         <p>Roll Number : ${data[0].RollNumber}</p>
         <p>Mobile Number : ${data[0].mobile}</p>
@@ -153,7 +155,10 @@ async function stdcheck() {
         <p>Id : ${data[0].id}</p>
         <p>Status : ${data[0].status}</p>
         <p>Address : ${data[0].address}</p>
-`
+        `
+        } else {
+            alert('Please Enter A Correct Roll Number')
+        }
     }
 }
 
