@@ -23,11 +23,9 @@ let gender = document.getElementById('gender')
 
 
 function capitalizeFirst(input) {
-     let value = input.value.toLowerCase();
+    let value = input.value.toLowerCase();
     input.value = value.replace(/\b\w/g, char => char.toUpperCase());
 }
-
-
 
 
 
@@ -101,6 +99,29 @@ if (addStudentData) {
         }
     })
 
+    const courseCatagary = document.getElementById('CourseCatagary')
+    const courses = document.getElementById('Course')
+    courses.addEventListener('change', () => {
+        courseCatagary.style.display = 'block'
+        if (courses.value == 'Language') {
+            courseCatagary.innerHTML = `
+            <option value="" selected disabled>Select Course</option>
+            <option value="English">English</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Arabic">Arabic</option>
+            `
+        } else {
+            courseCatagary.innerHTML = `
+<option value="" selected disabled>Select Course</option>
+<option value="Web Development">Web Development</option>
+<option value="Graphic Designing">Graphic Designing</option>
+<option value="Digital Marketing">Digital Marketing</option>
+<option value="Cyber Security">Cyber Security</option>
+`
+        }
+    })
+
+
     addStudentData.addEventListener('click', async () => {
         let random = Math.floor(Math.random() * 100 + 100)
         if (studentName.value === `` && fatherName.value === '' && pkNumberRegex.test(mobileNumber.value) && age.value === '' && Qualfication.value === '' && gender.value === '' && address.value === `` && !emailRegex.test(email.value)) {
@@ -118,11 +139,12 @@ if (addStudentData) {
                 email: email.value,
                 Qualification: Qualfication.value.trim(),
                 gender: gender.value.trim(),
+                course: courseCatagary.value,
                 address: address.value.trim(),
                 RollNumber: random
             }
             startloader()
-            const { data, error } = await client
+            const { error } = await client
                 .from('Students')
                 .insert([allData])
                 .select('*')

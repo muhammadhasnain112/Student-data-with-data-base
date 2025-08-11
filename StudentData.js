@@ -31,6 +31,7 @@ async function showdata() {
             <td data-label="Age">${e.age}</td>
             <td data-label="Mobile">${e.email}</td>
             <td data-label="Roll Number">${e.RollNumber}</td>
+            <td data-label="course">${e.course}</td>
             <td data-label="Qualification">${e.Qualification}</td>
             <td data-label="Gender">${e.gender}</td>
             <td data-label="Address">${e.address}</td>
@@ -76,6 +77,7 @@ async function showadmin() {
             <td data-label="Age">${e.age}</td>
             <td data-label="Mobile">${e.email}</td>
             <td data-label="Roll Number">${e.RollNumber}</td>
+            <td data-label="course">${e.course}</td>
             <td data-label="Qualification">${e.Qualification}</td>
             <td data-label="Gender">${e.gender}</td>
             <td data-label="Address">${e.address}</td>

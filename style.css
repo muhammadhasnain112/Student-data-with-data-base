@@ -120,13 +120,16 @@ body {
     float: right;
 }
 
-#gender {
+#gender,#Course ,#CourseCatagary{
     text-align: center;
     outline: none;
     height: 5vh !important;
     border-radius: 10px;
     padding: 5px;
     color: black !important;
+}
+#CourseCatagary{
+    display: none;
 }
 
 #studentLogin input {

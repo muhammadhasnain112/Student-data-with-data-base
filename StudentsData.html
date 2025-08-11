@@ -56,30 +56,73 @@
             font-size: 2.5rem;
         }
 
-        table {
+        /* table {
             width: 100%;
-            /* max-width: 1000px; */
+            
             border-collapse: collapse;
             background-color: #e5d4ff;
             box-shadow: 0 4px 10px rgba(92, 45, 145, 0.2);
             border-radius: 10px;
-            overflow: hidden;
+           
         }
 
         thead {
             background-color: #c49aff;
             color: #320a62;
-        }
-
+        }*/
         th,
         td {
-            padding: 15px;
+            padding:3.1px;
+            /* overflow-x: scroll; */
+            overflow-y: hidden;
             text-align: center;
+        } 
+        ::-webkit-scrollbar-thumb{
+            border-radius: 10px;
+            background-color: #320a62;
         }
-
-        tbody {
+::-webkit-scrollbar{
+    background-color: #a066d1;
+    border-radius: 10px;
+}
+        /* tbody {
             max-height: 100px !important;
-        }
+        }  */
+
+        table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #e5d4ff;
+    box-shadow: 0 4px 10px rgba(92, 45, 145, 0.2);
+    border-radius: 10px;
+}
+
+/* Table Header ko fix rakhna */
+thead {
+    background-color: #c49aff;
+    color: #320a62;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Scrollable tbody */
+tbody {
+    display: block;
+    max-height: 300px; /* jitna height chahiye */
+    overflow-y: auto;
+    width: 100%;
+}
+
+/* Table cells proper align ho */
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+    
+
+
 
         tr:nth-child(even) {
             background-color: #f0e5ff;
@@ -177,6 +220,7 @@
                 <th>Age</th>
                 <th>Email</th>
                 <th>Roll Number</th>
+                <th>Course</th>
                 <th>Qualification</th>
                 <th>Gender</th>
                 <th>Address</th>
