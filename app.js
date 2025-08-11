@@ -12,12 +12,25 @@ let adminLoginInput = document.getElementById('adminlogininput')
 let loader = document.getElementById('loader')
 
 let studentName = document.getElementById('name')
+let email = document.getElementById('email')
 let fatherName = document.getElementById('f-name')
 let mobileNumber = document.getElementById('m-number')
 let age = document.getElementById('age')
 let Qualfication = document.getElementById('Qualfication')
 let address = document.getElementById('address')
 let gender = document.getElementById('gender')
+
+
+
+function capitalizeFirst(input) {
+     let value = input.value.toLowerCase();
+    input.value = value.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+
+
+
+
 
 async function adminLogin() {
     let token = localStorage.getItem('authToken')
@@ -27,17 +40,20 @@ async function adminLogin() {
     mainDiv.style.display = 'none'
     studentLogin.style.display = 'none'
     adminLoginDiv.style.display = 'flex'
+
     function abc() {
         if (adminLoginInput.value == 12446) {
             localStorage.setItem("authToken", "userLoggedIn");
-            Swal.fire("Admin!", "Login Successfuly!", "success").then(() => {
+            toastr.success('Admin Login')
+            setTimeout(() => {
                 window.location.href = "admin.html";
-            });
+            }, 1000)
         } else {
-            alert('wrong key')
+            toastr.error('Wrong Key')
             adminLoginInput.value = ``
         }
     }
+
     document.getElementById('login').addEventListener('click', abc)
     document.addEventListener('keyup', (e) => {
         if (e.key == 'Enter') {
@@ -52,27 +68,57 @@ function addStudent() {
     mainDiv.style.display = 'none'
     adminLoginDiv.style.display = 'none'
     studentLogin.style.display = `flex`
-
 }
 
-
+let pkNumberRegex = /^(\+92|0092|92|0)3[0-9]{9}$/;
+let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 let addStudentData = document.getElementById('addStudent')
 if (addStudentData) {
-    let random = Math.floor(Math.random() * 100 + 100)
+    mobileNumber.addEventListener('input', () => {
+        if (pkNumberRegex.test(mobileNumber.value)) {
+            mobileNumber.style.border = `none`
+        } else {
+            mobileNumber.style.border = `2.5px solid red`
+            return;
+        }
+    })
+
+    email.addEventListener('input', () => {
+        if (emailRegex.test(email.value)) {
+            email.style.border = `none`
+        } else {
+            email.style.border = `2.5px solid red`
+            return;
+        }
+    })
+    age.addEventListener('input', () => {
+        if (age.value >= 30) {
+            age.style.border = `2.5px solid red`
+            toastr.error(`Your Age Is Above Of 30`)
+        } else {
+            age.style.border = `none`
+
+        }
+    })
+
     addStudentData.addEventListener('click', async () => {
-        if (studentName.value == `` && fatherName.value == '' && mobileNumber.value == '' && age.value == '' && Qualfication.value == '' && gender.value == '' && address.value == ``) {
-            alert('Please Fill All Field')
+        let random = Math.floor(Math.random() * 100 + 100)
+        if (studentName.value === `` && fatherName.value === '' && pkNumberRegex.test(mobileNumber.value) && age.value === '' && Qualfication.value === '' && gender.value === '' && address.value === `` && !emailRegex.test(email.value)) {
+            toastr.error('Please Fill All Field')
+            return;
         } else {
             let Sname = studentName.value.slice(0, 1).toUpperCase() + studentName.value.slice(1)
             let Fname = fatherName.value.slice(0, 1).toUpperCase() + fatherName.value.slice(1)
+            let QualficationChange = Qualfication.value.slice(0, 1).toUpperCase() + Qualfication.value.slice(1)
             const allData = {
-                name: Sname,
-                fatherName: Fname,
-                mobile: mobileNumber.value,
-                age: age.value,
-                Qualification: Qualfication.value,
-                gender: gender.value,
-                address: address.value,
+                name: Sname.trim(),
+                fatherName: Fname.trim(),
+                mobile: mobileNumber.value.trim(),
+                age: age.value.trim(),
+                email: email.value,
+                Qualification: Qualfication.value.trim(),
+                gender: gender.value.trim(),
+                address: address.value.trim(),
                 RollNumber: random
             }
             startloader()
@@ -83,12 +129,12 @@ if (addStudentData) {
             loader.style.display = `none`
             if (error) {
                 console.log(error.message);
+                return;
             } else {
-                // console.log(data);
-                Swal.fire("Student!", "Add Successfuly!", "success").then(() => {
-                    window.location.href = `StudentsData.html`
-                    // window.location.href = "index.html";
-                });
+                toastr.success('Student Added')
+                setTimeout(() => {
+                    window.location.href = "StudentsData.html";
+                }, 1000)
             }
         }
     })
@@ -96,11 +142,17 @@ if (addStudentData) {
 
 
 
+
+
+
 function adminlogout() {
     localStorage.clear()
-    Swal.fire("Admin!", "Logout Successfuly!", "success").then(() => {
+    toastr.info('Admin Logout')
+    setTimeout(() => {
         window.location.href = "index.html";
-    });
+    }, 1000)
+    // window.location.href = "index.html";
+
 }
 
 
@@ -127,7 +179,6 @@ let StudentDataWithRoll = document.getElementById('Studentdatawithroll')
 // let ShowFilter = document.getElementById('ShowFilter')
 
 async function stdcheck() {
-    // Roll.style.display = 'none'
     loader.style.display = `flex`
     const { data, error } = await client
         .from('Students')
@@ -137,10 +188,7 @@ async function stdcheck() {
     if (error) {
         alert(error.message)
     } else {
-        console.log(data.length);
-
-
-        if (!data.length == 0) {
+        if (!data.length == 0 && Roll.value == data[0].RollNumber) {
             console.log(data[0]);
             Roll.style.display = 'none'
             check.style.display = 'none'
@@ -157,7 +205,8 @@ async function stdcheck() {
         <p>Address : ${data[0].address}</p>
         `
         } else {
-            alert('Please Enter A Correct Roll Number')
+            toastr.error(`Please Enter A Correct Roll Number`)
+
         }
     }
 }

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 </head>
 
 <body>
@@ -23,17 +24,19 @@
 
     <div id="studentLogin">
         <label for="name">
-            Name <input type="text" id="name" required>
+            Name <input type="text" id="name" required oninput="capitalizeFirst(this)">
         </label>
         <label for="Father Name">
-            Father Name <input type="text" id="f-name" required>
+            Father Name <input type="text" id="f-name" required oninput="capitalizeFirst(this)">
         </label>
         <label for="Mobile Number">
             Mobile Number <input type="number" id="m-number" required>
         </label>
-
+        <label for="Email">
+            Email <input type="email" id="email" required oninput="this.value = this.value.toLowerCase()">
+        </label>
         <label for="age">
-            Age <input type="number" id="age" required>
+            Age <input type="number" id="age" required >
         </label>
         <label for="lastQualfication">
             Last Qualfication <input type="text" id="Qualfication" required>
@@ -53,8 +56,8 @@
 
 
 
-
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>

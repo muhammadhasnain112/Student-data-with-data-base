@@ -29,6 +29,7 @@ async function showdata() {
             <td data-label="Father Name">${e.fatherName}</td>
             <td data-label="Mobile">${e.mobile}</td>
             <td data-label="Age">${e.age}</td>
+            <td data-label="Mobile">${e.email}</td>
             <td data-label="Roll Number">${e.RollNumber}</td>
             <td data-label="Qualification">${e.Qualification}</td>
             <td data-label="Gender">${e.gender}</td>
@@ -45,10 +46,13 @@ if (token) {
 } else {
     showdata()
 }
-async function adminshowdata() {
+function adminshowdata() {
     table.innerHTML = ``
-    th.innerHTML += `
-            <th>Delete</th>`
+    th.innerHTML += `<th>Delete</th>`;
+    showadmin()
+}
+
+async function showadmin() {
     loader.style.display = `flex`
     h1.style.display = `none`
     maintable.style.display = 'none'
@@ -60,14 +64,17 @@ async function adminshowdata() {
     maintable.style.display = 'block'
     if (error) {
         alert(error.message)
+        return;
     } else {
+        table.innerHTML = ``
         data.forEach((e) => {
             table.innerHTML += `
-          <tr>
+            <tr>
             <td data-label="Name">${e.name}</td>
             <td data-label="Father Name">${e.fatherName}</td>
             <td data-label="Mobile">${e.mobile}</td>
             <td data-label="Age">${e.age}</td>
+            <td data-label="Mobile">${e.email}</td>
             <td data-label="Roll Number">${e.RollNumber}</td>
             <td data-label="Qualification">${e.Qualification}</td>
             <td data-label="Gender">${e.gender}</td>
@@ -75,10 +82,11 @@ async function adminshowdata() {
             <td data-label="Status"><select onchange="status(${e.id})" id="status"><option value="" selected disabled >${e.status}</option><option value="Pending">Pending</option><option value="Active">Active</option><option value="Reject">Reject</option></select></td>
             <td data-label="Status"><img src="img/delete.png" alt=""  width="35" onclick="dlt(${e.id})"></td>
             </tr>
-          `
+            `
         });
     }
 }
+
 async function status(id) {
     let checkstatus = document.getElementById('status')
     const { data, error } = await client
@@ -89,7 +97,9 @@ async function status(id) {
     if (error) {
         alert(error.message)
     } else {
-        alert(`Student Status Changed to ${checkstatus.value}`)
+        // alert(`Student Status Changed to ${checkstatus.value}`)
+        toastr.success(`Student Status Changed to ${checkstatus.value}`)
+
     }
 }
 
@@ -102,10 +112,10 @@ async function dlt(id) {
         .select()
     if (error) {
         alert(error.message)
+        return;
     } else {
-        Swal.fire("Student!", "Removed!", "success").then(() => {
-            adminshowdata()
-        });
+        toastr.info(`Student Removed`)
+        showadmin()
     }
 
 }
