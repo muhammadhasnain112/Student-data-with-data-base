@@ -4,60 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-    <style>
-        body {
-            display: flex;
-            justify-content: space-evenly;
-        }
-
-        button {
-            padding: 12px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            background-color: #4B2574;
-            color: white;
-            cursor: pointer;
-            width: 20%;
-
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #7631a4;
-            transition: all 0.6s ease-in-out;
-        }
-    </style>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
 </head>
 
 <body>
+    <div class="header animate__animated animate__fadeIn">
+        <h1>Admin Dashboard</h1>
+        <p>Manage student records and system settings</p>
+    </div>
 
+    <div class="dashboard-container animate__animated animate__fadeInUp">
+        <div class="btn-group">
+            <button class="btn btn-primary animate__animated animate__fadeInLeft" onclick="CheckStudent()">
+                <i class="fas fa-users"></i> View Students
+            </button>
+            <button class="btn btn-danger animate__animated animate__fadeInRight" onclick="adminlogout()">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </button>
+        </div>
+    </div>
 
-
-
-    <button onclick="CheckStudent()">Check Students</button>
-    <button onclick="adminlogout()">Log Out</button>
-
-
-
-
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- JS Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js"></script>
-    <script>
-        let token = localStorage.getItem('authToken')
-        if (!token) {
-            window.location.href = `index.html`
-        }
-        function CheckStudent() {
-            window.location.href = `StudentsData.html`
-        }
-    </script>
+    <script src="admin.js"></script>
 </body>
 
 </html>

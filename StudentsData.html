@@ -4,240 +4,73 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Data</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        select {
-            padding: 8px 12px;
-            border: 2px solid #a066d1;
-            border-radius: 6px;
-            background-color: #f5e9ff;
-            color: #3d2a54;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        select:hover {
-            border-color: #5c2d91;
-            background-color: #e6d4ff;
-        }
-
-        select:focus {
-            border-color: #5c2d91;
-            box-shadow: 0 0 5px rgba(92, 45, 145, 0.3);
-        }
-
-        option {
-            background-color: #f5e9ff;
-            color: #3d2a54;
-        }
-
-        body {
-            background-color: #f3ebff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-            min-height: 100vh;
-        }
-
-        h1 {
-            color: #5c2d91;
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-        }
-
-        /* table {
-            width: 100%;
-            
-            border-collapse: collapse;
-            background-color: #e5d4ff;
-            box-shadow: 0 4px 10px rgba(92, 45, 145, 0.2);
-            border-radius: 10px;
-           
-        }
-
-        thead {
-            background-color: #c49aff;
-            color: #320a62;
-        }*/
-        th,
-        td {
-            padding: 3.1px;
-            /* overflow-x: scroll; */
-            overflow-y: hidden;
-            text-align: center;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            border-radius: 5px;
-            background: rgba(128, 128, 128, 0.296);
-            /* background-color: #a066d1; */
-        }
-
-        ::-webkit-scrollbar {
-            /* width: 20%; */
-            /* background-  color: #a066d1; */
-            border-radius: 10px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #e5d4ff;
-            box-shadow: 0 4px 10px rgba(92, 45, 145, 0.2);
-            border-radius: 10px;
-        }
-
-        /* Table Header ko fix rakhna */
-        thead {
-            background-color: #c49aff;
-            color: #320a62;
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        /* Scrollable tbody */
-        tbody {
-            display: block;
-            max-height: 300px;
-            /* jitna height chahiye */
-            overflow-y: auto;
-            width: 100%;
-        }
-
-        /* Table cells proper align ho */
-        tbody tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-
-
-
-        tr:nth-child(even) {
-            background-color: #f0e5ff;
-        }
-
-        tr:hover {
-            background-color: #d1b3ff;
-            transition: background-color 0.3s ease;
-        }
-
-        th {
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        td {
-            color: #3d2a54;
-        }
-
-        @media (max-width: 768px) {
-
-            table,
-            thead,
-            tbody,
-            th,
-            td,
-            tr {
-                display: block;
-            }
-
-            thead {
-                display: none;
-            }
-
-            tr {
-                margin-bottom: 15px;
-                background-color: #e5d4ff;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(92, 45, 145, 0.15);
-            }
-
-            td {
-                text-align: right;
-                padding: 10px 20px;
-                position: relative;
-            }
-
-            td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 20px;
-                top: 10px;
-                font-weight: bold;
-                text-align: left;
-                color: #5c2d91;
-            }
-        }
-
-        #loader {
-            width: 50px;
-            padding: 8px;
-            position: absolute;
-            z-index: 9999;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            background: #4B2574;
-            display: none;
-            --_m:
-                conic-gradient(#0000 10%, #000),
-                linear-gradient(#000 0 0) content-box;
-            -webkit-mask: var(--_m);
-            mask: var(--_m);
-            -webkit-mask-composite: source-out;
-            mask-composite: subtract;
-            animation: l3 1s infinite linear;
-        }
-
-        @keyframes l3 {
-            to {
-                transform: rotate(1turn)
-            }
-        }
-    </style>
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="studentdata.css">
 </head>
 
 <body>
     <div id="loader"></div>
-    <h1 id="h1">Students Data</h1>
-    <table border="1" id="maintable">
-        <thead>
-            <tr id="th">
-                <th>Name</th>
-                <th>Father Name</th>
-                <th>Mobile Number</th>
-                <th>Age</th>
-                <th>Email</th>
-                <th>Roll Number</th>
-                <th>Course</th>
-                <th>Qualification</th>
-                <th>Gender</th>
-                <th>Address</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody id="table"></tbody>
-    </table>
+    <h1 id="h1">Student Records</h1>
+    
+    <div class="filter-container">
+        <select id="courseFilter">
+            <option value="" selected>All Courses</option>
+            <option value="IT">Information Technology</option>
+            <option value="Language">Language</option>
+        </select>
+        <!-- <select id="categoryFilter" style="display: none;">
+            <option value="" selected>All Categories</option>
+        </select> -->
+        <select id="statusFilter">
+            <option value="" selected>All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Active">Active</option>
+            <option value="Reject">Rejected</option>
+        </select>
+    </div>
+    
+    <div class="table-container">
+        <table id="studentTable">
+            <thead>
+                <tr id="th">
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Father Name</th>
+                    <th>Mobile</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Roll No.</th>
+                    <th>Course</th>
+                    <th>Qualification</th>
+                    <th>Gender</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th id="actionHeader" style="display: none;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table">
+                <!-- Data will be inserted here -->
+            </tbody>
+        </table>
+        <div id="noData" class="no-data" style="display: none;">
+            No student records found
+        </div>
+    </div>
+
+    <div class="admin-controls" id="adminControls" style="display: none;">
+        <button class="btn btn-primary" onclick="window.location.href='admin.html'">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="StudentData.js">
-    </script>
+    
+<script src="StudentData.js"></script>
 </body>
-
 </html>

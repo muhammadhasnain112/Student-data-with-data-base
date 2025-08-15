@@ -1,3 +1,18 @@
+toastr.options = {
+    "closeButton": true,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "3000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
+
+
 const supabaseUrl = 'https://ipoviueuhflhqjemgfkw.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlwb3ZpdWV1aGZsaHFqZW1nZmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5Mzc5NzEsImV4cCI6MjA2ODUxMzk3MX0.ACNfp4MRa7-r1YYmu04VDltBo5UudrKWWw2NyDPBrk0'
 const client = supabase.createClient(supabaseUrl, supabaseKey)
@@ -5,20 +20,21 @@ const client = supabase.createClient(supabaseUrl, supabaseKey)
 
 
 // let mainDiv = document.getElementById('info')
-let mainDiv = document.getElementById('info')
-let adminLoginDiv = document.getElementById('adminlogin')
-let studentLogin = document.getElementById('studentLogin')
-let adminLoginInput = document.getElementById('adminlogininput')
-let loader = document.getElementById('loader')
+const mainDiv = document.getElementById('info')
+const adminLoginDiv = document.getElementById('adminlogin')
+const studentLogin = document.getElementById('studentLogin')
+const adminLoginInput = document.getElementById('adminlogininput')
+const loader = document.getElementById('loader')
+const img = document.getElementById('img')
 
-let studentName = document.getElementById('name')
-let email = document.getElementById('email')
-let fatherName = document.getElementById('f-name')
-let mobileNumber = document.getElementById('m-number')
-let age = document.getElementById('age')
-let Qualfication = document.getElementById('Qualfication')
-let address = document.getElementById('address')
-let gender = document.getElementById('gender')
+const studentName = document.getElementById('name')
+const email = document.getElementById('email')
+const fatherName = document.getElementById('f-name')
+const mobileNumber = document.getElementById('m-number')
+const age = document.getElementById('age')
+const Qualfication = document.getElementById('Qualfication')
+const address = document.getElementById('address')
+const gender = document.getElementById('gender')
 
 
 
@@ -123,37 +139,70 @@ if (addStudentData) {
 
 
     addStudentData.addEventListener('click', async () => {
-        let random = Math.floor(Math.random() * 100 + 100)
+
+        const { data: userid } = await client
+            .from('RollNumber')
+            .insert({ email: email.value })
+            .select('id')
+        console.log(userid[0].id);
         if (studentName.value === `` && fatherName.value === '' && pkNumberRegex.test(mobileNumber.value) && age.value === '' && Qualfication.value === '' && gender.value === '' && address.value === `` && !emailRegex.test(email.value)) {
             toastr.error('Please Fill All Field')
             return;
         } else {
-            let Sname = studentName.value.slice(0, 1).toUpperCase() + studentName.value.slice(1)
-            let Fname = fatherName.value.slice(0, 1).toUpperCase() + fatherName.value.slice(1)
+
             let QualficationChange = Qualfication.value.slice(0, 1).toUpperCase() + Qualfication.value.slice(1)
             const allData = {
-                name: Sname.trim(),
-                fatherName: Fname.trim(),
+                name: studentName.value.trim(),
+                fatherName: fatherName.value.trim(),
                 mobile: mobileNumber.value.trim(),
                 age: age.value.trim(),
                 email: email.value,
-                Qualification: Qualfication.value.trim(),
+                Qualification: QualficationChange.trim(),
                 gender: gender.value.trim(),
                 course: courseCatagary.value,
                 address: address.value.trim(),
-                RollNumber: random
+                RollNumber: userid[0].id,
             }
             startloader()
-            const { error } = await client
+            const { data, error } = await client
                 .from('Students')
                 .insert([allData])
                 .select('*')
+
+            const { data: getStdData, error: StdDataError } = await client
+                .from('Students')
+                .select('uid')
+                .eq('RollNumber', userid[0].id)
+            console.log(getStdData);
+            const file = img.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `StudentAddImage/${getStdData[0].uid}.${fileExt}`;
+            const { data: userImage, error: userError } = await client.storage
+                .from('StudentImage')
+                .upload(fileName, file, {
+                });
+            if (userError) {
+                alert(userError.message)
+            }
+            console.log("userImage uploaded");
+            const { data: publicurl } = client
+                .storage
+                .from('StudentImage')
+                .getPublicUrl(fileName)
+            // console.log(publicurl.publicUrl);
+
+            const { error: updateError } = await client
+                .from('Students')
+                .update({ imgPath: publicurl.publicUrl })
+                .eq('RollNumber', userid[0].id)
+
             loader.style.display = `none`
             if (error) {
                 console.log(error.message);
                 return;
             } else {
                 toastr.success('Student Added')
+                // console.log(data);
                 setTimeout(() => {
                     window.location.href = "StudentsData.html";
                 }, 1000)
@@ -234,5 +283,8 @@ async function stdcheck() {
 }
 
 
-
-
+function backToMain() {
+    adminLoginDiv.style.display = 'none';
+    studentLogin.style.display = 'none';
+    mainDiv.style.display = 'flex';
+}

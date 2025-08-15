@@ -4,68 +4,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+    <style>
+
+    </style>
 </head>
 
 <body>
-    <div class="loader" id="loader"></div>
-    <div id="info">
-        <button onclick="addStudent()">Add Student</button>
-        <button onclick="adminLogin()">Admin Login</button>
-        <button onclick="checkstudents()">Check All Students</button>
-        <button onclick="checkstudentwithrollnum()">Check Student With Roll Number</button>
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
     </div>
 
-    <div id="adminlogin">
-        <input type="number" placeholder="Enter Secret Code" id="adminlogininput"><button id="login">Login</button>
+    <div class="container">
+        <!-- Main Menu -->
+        <div id="info" class="flex-center animate-in">
+            <div class="header">
+                <h1>Student Management System</h1>
+                <p>Efficiently manage student records and information</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary animate__animated animate__fadeInUp" onclick="addStudent()">
+                    <i class="fas fa-user-plus"></i> Add Student
+                </button>
+                <button class="btn btn-secondary animate__animated animate__fadeInUp animate__delay-1s"
+                    onclick="adminLogin()">
+                    <i class="fas fa-lock"></i> Admin Login
+                </button>
+                <button class="btn btn-warning animate__animated animate__fadeInUp animate__delay-2s"
+                    onclick="checkstudents()">
+                    <i class="fas fa-users"></i> View All Students
+                </button>
+                <button class="btn btn-danger animate__animated animate__fadeInUp animate__delay-3s"
+                    onclick="checkstudentwithrollnum()">
+                    <i class="fas fa-id-card"></i> Find by Roll Number
+                </button>
+            </div>
+        </div>
+
+        <!-- Admin Login -->
+        <div id="adminlogin" style="display: none;">
+            <div class="flex-center">
+                <div class="card animate-in" style="max-width: 450px;">
+                    <h2 class="card-title">Admin Portal</h2>
+                    <div class="form-group">
+                        <label for="adminlogininput" class="form-label">Enter Secret Key</label>
+                        <input type="password" class="form-control" id="adminlogininput" placeholder="Enter admin key">
+                    </div>
+                    <button class="btn btn-primary" id="login" style="width: 100%;">
+                        Login
+                    </button>
+                    <button onclick="backToMain()" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                        Back to Main Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Form -->
+        <div id="studentLogin" style="display: none; margin-left: 20vw;">
+            <div class="flex-center">
+                <div class="card animate-in" style="max-width: 600px;">
+                    <h2 class="card-title">Student Registration</h2>
+                    <form id="studentForm">
+                        <div class="grid grid-cols-2">
+                            <div class="form-group">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="name" required
+                                    oninput="capitalizeFirst(this)">
+                            </div>
+                            <div class="form-group">
+                                <label for="f-name" class="form-label">Father's Name</label>
+                                <input type="text" class="form-control" id="f-name" required
+                                    oninput="capitalizeFirst(this)">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div class="form-group">
+                                <label for="m-number" class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control" id="m-number" required>
+                                <small class="text-muted" style="color: var(--gray);">Format: 03001234567</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" required
+                                    oninput="this.value = this.value.toLowerCase()">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div class="form-group">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" min="16" max="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select class="form-control" id="gender" required>
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2">
+                            <div class="form-group">
+                                <label for="Qualfication" class="form-label">Last Qualification</label>
+                                <input type="text" class="form-control" id="Qualfication" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="file-input-container">
+                                    <div class="file-input-wrapper">
+                                        <label for="image" class="form-label">Upload Image</label>
+                                        <label for="img" class="file-input-label">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            Upload Student Image
+                                        </label>
+                                        <input type="file" class="form-control" id="img" accept="image/*" required>
+
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        </div>
+
+                        <div class="grid grid-cols-2">
+                            <div class="form-group">
+                                <label for="Course" class="form-label">Course Category</label>
+                                <select class="form-control" id="Course" required>
+                                    <option value="" disabled selected>Select Category</option>
+                                    <option value="Language">Language</option>
+                                    <option value="IT">Information Technology</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="CourseCatagary" class="form-label">Course</label>
+                                <select class="form-control" id="CourseCatagary" required>
+                                    <option value="" disabled selected>Select Course</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" required></textarea>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="addStudent" style="width: 100%;">
+                            Register Student
+                        </button>
+                        <button type="button" onclick="backToMain()" class="btn btn-secondary"
+                            style="width: 100%; margin-top: 1rem;">
+                            Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="studentLogin">
-        <label for="name">
-            Name <input type="text" id="name" required oninput="capitalizeFirst(this)">
-        </label>
-        <label for="Father Name">
-            Father Name <input type="text" id="f-name" required oninput="capitalizeFirst(this)">
-        </label>
-        <label for="Mobile Number">
-            Mobile Number <input type="number" id="m-number" required>
-        </label>
-        <label for="Email">
-            Email <input type="email" id="email" required oninput="this.value = this.value.toLowerCase()">
-        </label>
-        <label for="age">
-            Age <input type="number" id="age" required >
-        </label>
-        <label for="lastQualfication">
-            Last Qualfication <input type="text" id="Qualfication" required>
-        </label>
-        <select name="" id="gender">
-            <option value="" selected disabled>Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <select name="" id="Course">
-            <option value="" selected disabled>Select Course Catagary</option>
-            <option value="Language">Language</option>
-            <option value="IT">IT</option>
-        </select>
-        <select name="" id="CourseCatagary">
-            <option value="" selected disabled>Select Course</option>
-        </select>
-        <label for="address">
-            Address<textarea name="address" id="address" required></textarea>
-        </label>
-        <button id="addStudent">Add</button>
-    </div>
 
-
-
-
-
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
