@@ -370,3 +370,16 @@
   #adminlogin{
     margin-left:30%;
   }
+
+#status{
+    width: 13vw;
+    /* padding: 10px !important; */
+    border-radius: 10px;
+}
+#markRoll{
+    width: 13vw;
+    border: 1px solid gray;
+    padding: 8px;
+    outline: none;
+    border-radius: 10px;
+}

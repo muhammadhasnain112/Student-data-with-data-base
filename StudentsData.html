@@ -14,24 +14,39 @@
 <body>
     <div id="loader"></div>
     <h1 id="h1">Student Records</h1>
-    
+
     <div class="filter-container">
+        <input type="number" placeholder="Search By RollNumber" id="FilterRollNum">
+        <input type="text" placeholder="Search By Cnic" id="FilterCnicNum" oninput="formatCNIC(this)">
+        <button id="clearallfilters">Clear All Filters</button>
+        <button id="allFiltersbtn">Filters</button>
+    </div>
+    <div id="allFilters">
         <select id="courseFilter">
-            <option value="" selected>All Courses</option>
+            <option value="All" selected>All Courses</option>
             <option value="IT">Information Technology</option>
             <option value="Language">Language</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Graphic Designing">Graphic Designing</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="English">English</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Arabic">Arabic</option>
         </select>
-        <!-- <select id="categoryFilter" style="display: none;">
-            <option value="" selected>All Categories</option>
-        </select> -->
+        <select name="" id="genderfilter">
+            <option value="All" selected>All Genders</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
         <select id="statusFilter">
-            <option value="" selected>All Statuses</option>
+            <option value="All" selected>All Statuses</option>
             <option value="Pending">Pending</option>
             <option value="Active">Active</option>
             <option value="Reject">Rejected</option>
         </select>
+        <button id="back">Back</button>
     </div>
-    
     <div class="table-container">
         <table id="studentTable">
             <thead>
@@ -44,7 +59,7 @@
                     <th>Email</th>
                     <th>Roll No.</th>
                     <th>Course</th>
-                    <th>Qualification</th>
+                    <th>CNIC</th>
                     <th>Gender</th>
                     <th>Address</th>
                     <th>Status</th>
@@ -70,7 +85,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
 <script src="StudentData.js"></script>
 </body>
+
 </html>

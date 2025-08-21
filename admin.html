@@ -12,23 +12,45 @@
 </head>
 
 <body>
-    <div class="header animate__animated animate__fadeIn">
-        <h1>Admin Dashboard</h1>
-        <p>Manage student records and system settings</p>
-    </div>
+    <div class="animate__animated animate__fadeIn table-container" id="table">
+        <h1 style="text-align: center;">Student Attendance</h1>
+        <table class="">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Roll Number</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
 
-    <div class="dashboard-container animate__animated animate__fadeInUp">
-        <div class="btn-group">
-            <button class="btn btn-primary animate__animated animate__fadeInLeft" onclick="CheckStudent()">
-                <i class="fas fa-users"></i> View Students
-            </button>
-            <button class="btn btn-danger animate__animated animate__fadeInRight" onclick="adminlogout()">
-                <i class="fas fa-sign-out-alt"></i> Log Out
-            </button>
-        </div>
+            </tbody>
+        </table>
     </div>
+    <main id="main">
+
+        <div class="header animate__animated animate__fadeIn">
+            <h1>Admin Dashboard</h1>
+            <p>Manage student records and system settings</p>
+        </div>
+        <div class="dashboard-container animate__animated animate__fadeInUp">
+            <div class="btn-group">
+                <button class="btn btn-primary animate__animated animate__fadeInLeft" onclick="CheckStudent()">
+                    <i class="fas fa-users"></i> View Students
+                </button>
+                <button class="btn btn-primary animate__animated animate__fadeInLeft" onclick="Checkattendance()">
+                    <i class="fas fa-users"></i> View Attendance
+                </button>
+                <button class="btn btn-danger animate__animated animate__fadeInRight" onclick="adminlogout()">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+            </div>
+        </div>
+    </main>
 
     <!-- Font Awesome for icons -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <!-- JS Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

@@ -32,7 +32,7 @@ const email = document.getElementById('email')
 const fatherName = document.getElementById('f-name')
 const mobileNumber = document.getElementById('m-number')
 const age = document.getElementById('age')
-const Qualfication = document.getElementById('Qualfication')
+const cnic = document.getElementById('CNIC')
 const address = document.getElementById('address')
 const gender = document.getElementById('gender')
 
@@ -41,6 +41,17 @@ const gender = document.getElementById('gender')
 function capitalizeFirst(input) {
     let value = input.value.toLowerCase();
     input.value = value.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function formatCNIC(input) {
+    let value = input.value.replace(/\D/g, "");
+    if (value.length > 5 && value.length <= 12) {
+        value = value.slice(0, 5) + "-" + value.slice(5);
+    }
+    if (value.length > 12) {
+        value = value.slice(0, 5) + "-" + value.slice(5, 12) + "-" + value.slice(12, 13);
+    }
+    input.value = value;
 }
 
 
@@ -84,9 +95,11 @@ function addStudent() {
     studentLogin.style.display = `flex`
 }
 
-let pkNumberRegex = /^(\+92|0092|92|0)3[0-9]{9}$/;
-let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-let addStudentData = document.getElementById('addStudent')
+const pkNumberRegex = /^(\+92|0092|92|0)3[0-9]{9}$/;
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const addStudentData = document.getElementById('addStudent')
+
+
 if (addStudentData) {
     mobileNumber.addEventListener('input', () => {
         if (pkNumberRegex.test(mobileNumber.value)) {
@@ -105,6 +118,7 @@ if (addStudentData) {
             return;
         }
     })
+
     age.addEventListener('input', () => {
         if (age.value >= 30) {
             age.style.border = `2.5px solid red`
@@ -114,6 +128,7 @@ if (addStudentData) {
 
         }
     })
+
 
     const courseCatagary = document.getElementById('CourseCatagary')
     const courses = document.getElementById('Course')
@@ -139,37 +154,35 @@ if (addStudentData) {
 
 
     addStudentData.addEventListener('click', async () => {
-
         const { data: userid } = await client
             .from('RollNumber')
             .insert({ email: email.value })
             .select('id')
         console.log(userid[0].id);
-        if (studentName.value === `` && fatherName.value === '' && pkNumberRegex.test(mobileNumber.value) && age.value === '' && Qualfication.value === '' && gender.value === '' && address.value === `` && !emailRegex.test(email.value)) {
+        if (studentName.value === `` && fatherName.value === '' && pkNumberRegex.test(mobileNumber.value) && age.value === '' && cnic.value === '' && gender.value === '' && address.value === `` && !emailRegex.test(email.value)) {
             toastr.error('Please Fill All Field')
             return;
         } else {
-
-            let QualficationChange = Qualfication.value.slice(0, 1).toUpperCase() + Qualfication.value.slice(1)
             const allData = {
                 name: studentName.value.trim(),
                 fatherName: fatherName.value.trim(),
                 mobile: mobileNumber.value.trim(),
                 age: age.value.trim(),
                 email: email.value,
-                Qualification: QualficationChange.trim(),
+                cnic: cnic.value,
                 gender: gender.value.trim(),
                 course: courseCatagary.value,
                 address: address.value.trim(),
                 RollNumber: userid[0].id,
             }
             startloader()
-            const { data, error } = await client
+
+            const { data } = await client
                 .from('Students')
                 .insert([allData])
                 .select('*')
 
-            const { data: getStdData, error: StdDataError } = await client
+            const { data: getStdData, } = await client
                 .from('Students')
                 .select('uid')
                 .eq('RollNumber', userid[0].id)
@@ -177,7 +190,7 @@ if (addStudentData) {
             const file = img.files[0];
             const fileExt = file.name.split('.').pop();
             const fileName = `StudentAddImage/${getStdData[0].uid}.${fileExt}`;
-            const { data: userImage, error: userError } = await client.storage
+            const { error: userError } = await client.storage
                 .from('StudentImage')
                 .upload(fileName, file, {
                 });
@@ -190,22 +203,113 @@ if (addStudentData) {
                 .from('StudentImage')
                 .getPublicUrl(fileName)
             // console.log(publicurl.publicUrl);
-
             const { error: updateError } = await client
                 .from('Students')
                 .update({ imgPath: publicurl.publicUrl })
                 .eq('RollNumber', userid[0].id)
-
+            let imageUrl = publicurl.publicUrl
             loader.style.display = `none`
-            if (error) {
-                console.log(error.message);
+            if (updateError) {
+                console.log(updateError.message);
                 return;
             } else {
                 toastr.success('Student Added')
                 // console.log(data);
-                setTimeout(() => {
-                    window.location.href = "StudentsData.html";
-                }, 1000)
+                // iD Card Start    
+
+                // Show ID card and prepare PDF
+                generateStudentIdCard({
+                    name: studentName.value,
+                    fatherName: fatherName.value,
+                    age: age.value,
+                    gender: gender.value,
+                    Course: courseCatagary.value,
+                    address: address.value,
+                    CNIC: cnic.value,
+                    id: userid[0].id,
+                    imageUrl: imageUrl
+                });
+
+                function generateStudentIdCard(data) {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4',
+                    });
+
+                    const pageWidth = 210;
+                    const pageHeight = 297;
+
+                    const cardWidth = 85.6;
+                    const cardHeight = 53.98;
+
+                    const frontX = 20;
+                    const backX = frontX + cardWidth + 20;
+                    const cardY = 50;
+
+                    fetch(data.imageUrl)
+                        .then((res) => res.blob())
+                        .then((blob) => {
+                            const reader = new FileReader();
+                            reader.onload = function () {
+                                const imgData = reader.result;
+
+                                // FRONT SIDE
+                                doc.setFillColor(4, 22, 47); // Bootstrap primary blue
+                                doc.rect(frontX, cardY, cardWidth, cardHeight, 'F');
+                                doc.setTextColor(12, 65, 141);
+                                doc.setFontSize(20);
+                                doc.text('STUDENT ID CARD', frontX + 12, cardY + 8);
+
+                                doc.addImage(imgData, 'JPEG', frontX + 5, cardY + 12, 25, 25);
+
+                                doc.setTextColor(114, 167, 243);
+                                doc.setFontSize(8); 
+                                doc.text(`Name: ${data.name}`, frontX + 35, cardY + 17);
+                                doc.text(`Father: ${data.fatherName}`, frontX + 35, cardY + 23);
+                                doc.text(`Gender: ${data.gender}`, frontX + 35, cardY + 29);
+                                doc.text(`Course: ${data.Course}`, frontX + 35, cardY + 35);
+                                doc.text(`Age: ${data.age}`, frontX + 35, cardY + 41);
+                                doc.text(`Roll Number: ${data.id}`, frontX + 35, cardY + 47);
+
+                                // BACK SIDE
+                                doc.setFillColor(208, 226, 251);
+                                doc.rect(backX, cardY, cardWidth, cardHeight, 'F');
+                                doc.setTextColor(12, 65, 141);
+                                doc.setFontSize(20);
+
+                                doc.text('Student Details', backX + 5, cardY + 8);
+
+                                // doc.setFontSize(20);
+                                doc.setTextColor(0, 0, 0);
+                                doc.setFontSize(8);
+                                doc.text(`Address: ${data.address}`, backX + 5, cardY + 20, { maxWidth: cardWidth - 10 });
+                                doc.text(`Valid Till: Dec 2025`, backX + 5, cardY + 28);
+
+                                doc.setFontSize(7);
+                                doc.text('Note: Carry this card at all times on campus.', backX + 5, cardY + cardHeight - 5);
+
+                                // Instructions at bottom of page
+                                doc.setFontSize(10);
+                                doc.text(
+                                    'Instructions: This ID card is mandatory for all students and must be shown on request. Losing it may result in a fine.',
+                                    20,
+                                    pageHeight - 150,
+                                    { maxWidth: pageWidth - 40 }
+                                );
+
+                                doc.save('student_id_card.pdf');
+                            };
+                            reader.readAsDataURL(blob);
+                        });
+                }
+
+                // id Card ENd\\
+                adminLoginDiv.style.display = 'none';
+                studentLogin.style.display = 'none';
+                mainDiv.style.display = 'flex';
+
             }
         }
     })
@@ -240,47 +344,9 @@ function startloader() {
 }
 
 
-function checkstudentwithrollnum() {
-    window.location.href = 'checkstudent.html'
-}
 
-let Roll = document.getElementById('roll')
 
-let StudentDataWithRoll = document.getElementById('Studentdatawithroll')
-// let ShowFilter = document.getElementById('ShowFilter')
 
-async function stdcheck() {
-    loader.style.display = `flex`
-    const { data, error } = await client
-        .from('Students')
-        .select('*')
-        .eq('RollNumber', Roll.value)
-    loader.style.display = `none`
-    if (error) {
-        alert(error.message)
-    } else {
-        if (!data.length == 0 && Roll.value == data[0].RollNumber) {
-            console.log(data[0]);
-            Roll.style.display = 'none'
-            check.style.display = 'none'
-            StudentDataWithRoll.innerHTML = `
-            <h1>Name : ${data[0].name}</h1>
-        <h2>Father Name : ${data[0].fatherName}</h2>
-        <p>Roll Number : ${data[0].RollNumber}</p>
-        <p>Mobile Number : ${data[0].mobile}</p>
-        <p>Age : ${data[0].age}</p>
-        <p>Qualification : ${data[0].Qualification}</p>
-        <p>Gender : ${data[0].gender}</p>
-        <p>Id : ${data[0].id}</p>
-        <p>Status : ${data[0].status}</p>
-        <p>Address : ${data[0].address}</p>
-        `
-        } else {
-            toastr.error(`Please Enter A Correct Roll Number`)
-
-        }
-    }
-}
 
 
 function backToMain() {
@@ -288,3 +354,63 @@ function backToMain() {
     studentLogin.style.display = 'none';
     mainDiv.style.display = 'flex';
 }
+
+
+async function mark() {
+
+    Swal.fire({
+        title: "Mark Attendance",
+        confirmButtonText: 'Mark',
+        showCancelButton: true,
+        html: `
+            <input type="number" class="" id="markRoll" placeholder="Enter Roll Number">
+            <select id="status" class="swal2-input">
+            <option value="" selected disabled>Mark Attendance</option>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+            <option value="Leave">Leave</option>
+            </select>
+            `,
+    }).then(async () => {
+        const select = document.getElementById('status').value
+        const inputroll = document.getElementById('markRoll').value
+        const { data } = await client
+            .from('Students')
+            .select('*')
+            .eq('RollNumber', inputroll)
+        if (data.length == 0) {
+            toastr.error('No student has been added with this roll number')
+            return;
+        } else {
+            const { data: getdata } = await client
+                .from('Attendance')
+                .select('date,RollNumber')
+                .eq('RollNumber', inputroll)
+            console.log(getdata);
+            const date = new Date().toLocaleDateString();
+            if (getdata.length == 0) {
+                const { data: addData } = await client
+                    .from('Attendance')
+                    .insert({ StdName: data[0].name, status: select, RollNumber: inputroll, date: date })
+                    .select('*')
+                toastr.success('Attendance Marked Succesfuly')
+                console.log(addData);
+                Swal.fire('Attendance Marked')
+            } else {
+                if (getdata[0].date == date) {
+                    toastr.info('I have marked your presence today')
+                    return;
+                } else {
+                    const { data: addData } = await client
+                        .from('Attendance')
+                        .insert({ StdName: data[0].name, status: select, RollNumber: inputroll, date: date })
+                        .select('*')
+                    toastr.success('Attendance Marked Succesfuly')
+                    console.log(addData);
+                    Swal.fire('Attendance Marked')
+                }
+            }
+        }
+    });
+}
+

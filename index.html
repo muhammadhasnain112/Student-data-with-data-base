@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
     <style>
 
@@ -31,17 +32,16 @@
                 <button class="btn btn-primary animate__animated animate__fadeInUp" onclick="addStudent()">
                     <i class="fas fa-user-plus"></i> Add Student
                 </button>
-                <button class="btn btn-secondary animate__animated animate__fadeInUp animate__delay-1s"
+                <button class="btn btn-warning animate__animated animate__fadeInUp animate__delay-1s"
                     onclick="adminLogin()">
                     <i class="fas fa-lock"></i> Admin Login
                 </button>
-                <button class="btn btn-warning animate__animated animate__fadeInUp animate__delay-2s"
+                <button class="btn btn-secondary animate__animated animate__fadeInUp animate__delay-2s"
                     onclick="checkstudents()">
                     <i class="fas fa-users"></i> View All Students
                 </button>
-                <button class="btn btn-danger animate__animated animate__fadeInUp animate__delay-3s"
-                    onclick="checkstudentwithrollnum()">
-                    <i class="fas fa-id-card"></i> Find by Roll Number
+                <button class="btn btn-danger animate__animated animate__fadeInUp animate__delay-3s" onclick="mark()">
+                    <i class="fas fa-users"></i> Mark Attendance
                 </button>
             </div>
         </div>
@@ -113,8 +113,8 @@
                         </div>
                         <div class="grid grid-cols-2">
                             <div class="form-group">
-                                <label for="Qualfication" class="form-label">Last Qualification</label>
-                                <input type="text" class="form-control" id="Qualfication" required>
+                                <label for="CNIC" class="form-label">CNIC</label>
+                                <input type="text" class="form-control" id="CNIC" required oninput="formatCNIC(this)">
                             </div>
                             <div class="form-group">
                                 <div class="file-input-container">
@@ -129,7 +129,7 @@
                                     </div>
                                 </div>
                             </div>
-                         
+
                         </div>
 
                         <div class="grid grid-cols-2">
@@ -166,8 +166,9 @@
             </div>
         </div>
     </div>
-
-
+<script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
