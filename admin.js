@@ -78,7 +78,7 @@ function Checkattendance() {
         // console.log(data);
         if (data.length == 0) {
             toastr.info('No attendance for this Student')
-            return
+            return;
         }
         main.style.display= 'none'
         table.style.display= 'block'
