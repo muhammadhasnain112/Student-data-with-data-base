@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+        }
+
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #eef1f5;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #d1d9e6;
+            background-color: white;
+            font-size: 0.9rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
+        }
+
+        .status-present {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .status-absent {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .status-leave {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            th,
+            td {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-calendar-check"></i> Attendance System</h1>
+            <p class="description">Manage and track student attendance records</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="showattend()">
+                <i class="fas fa-calendar-day"></i> Today's Attendance
+            </button>
+            <button class="btn btn-secondary" onclick="showallAttend()">
+                <i class="fas fa-calendar-alt"></i> All Attendance Records
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Roll Number</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Attendance Management System &copy; 2023</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        // Your existing JavaScript code with minor CSS class additions
+        const supabaseUrl = 'https://ipoviueuhflhqjemgfkw.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlwb3ZpdWV1aGZsaHFqZW1nZmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5Mzc5NzEsImV4cCI6MjA2ODUxMzk3MX0.ACNfp4MRa7-r1YYmu04VDltBo5UudrKWWw2NyDPBrk0'
+        const client = supabase.createClient(supabaseUrl, supabaseKey)
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        const tbody = document.getElementById('tbody')
+
+        async function showattend() {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Loading today's attendance...</td></tr>`
+            let today = new Date().toLocaleDateString()
+            let tts = new Date().getDay()
+
+            const { data: getRollNum } = await client
+                .from('Students')
+                .select('RollNumber,name')
+
+            const { data: checktodayattend } = await client
+                .from('Attendance')
+                .select('*')
+                .eq('date', today);
+
+            if (checktodayattend.length == 0) {
+                getRollNum.forEach(async (element, i) => {
+                    if (tts == 2 || tts == 4 || tts == 6) {
+                        const { error } = await client
+                            .from('Attendance')
+                            .insert({ date: today, status: 'Absent', StdName: element.name, RollNumber: element.RollNumber })
+                    }
+                });
+            }
+
+            const { data } = await client
+                .from('Attendance')
+                .select('*')
+                .eq('date', today)
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No attendance records for today</td></tr>`
+                return
+            }
+
+            tbody.innerHTML = ``
+            data.forEach(element => {
+                const statusClass = `status-${element.status.toLowerCase()}`
+                tbody.innerHTML += `
+               <tr>
+                <td>${element.date}</td>
+                <td>${element.StdName}</td>
+               <td>
+                 <select id="attend-${element.RollNumber}" onchange="status(${element.RollNumber}, this.value)" class="${statusClass}">
+                   <option value="" disabled selected>${element.status}</option>
+                   <option value="Absent">Absent</option>
+                   <option value="Present">Present</option>
+                   <option value="Leave">Leave</option>
+                 </select>
+               </td>
+                <td>${element.RollNumber}</td>
+               </tr>`
+            });
+        }
+
+        async function status(das, val) {
+            const { error } = await client
+                .from('Attendance')
+                .update({ status: val })
+                .eq('RollNumber', das)
+
+            // Update the select element's class for styling
+            const selectElement = document.getElementById(`attend-${das}`)
+            selectElement.className = `status-${val.toLowerCase()}`
+
+            toastr.success(`Attendance marked as ${val} for roll number ${das}`)
+        }
+
+        async function showallAttend() {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Loading all attendance records...</td></tr>`
+            const { data } = await client
+                .from('Attendance')
+                .select('*')
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No attendance records found</td></tr>`
+                return
+            }
+
+            tbody.innerHTML = ``
+            data.forEach(element => {
+                const statusClass = `status-${element.status.toLowerCase()}`
+                tbody.innerHTML += `
+               <tr>
+                <td>${element.date}</td>
+                <td>${element.StdName}</td>
+                <td class="${statusClass}">${element.status}</td>
+                <td>${element.RollNumber}</td>
+               </tr>`
+            });
+        }
+
+        // Load today's attendance by default when page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            showattend();
+        });
+    </script>
+</body>
+
+</html>

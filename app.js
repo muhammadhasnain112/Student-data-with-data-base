@@ -357,60 +357,61 @@ function backToMain() {
 
 
 async function mark() {
+    window.location.href = `Attendance.html`
 
-    Swal.fire({
-        title: "Mark Attendance",
-        confirmButtonText: 'Mark',
-        showCancelButton: true,
-        html: `
-            <input type="number" class="" id="markRoll" placeholder="Enter Roll Number">
-            <select id="status" class="swal2-input">
-            <option value="" selected disabled>Mark Attendance</option>
-            <option value="Present">Present</option>
-            <option value="Absent">Absent</option>
-            <option value="Leave">Leave</option>
-            </select>
-            `,
-    }).then(async () => {
-        const select = document.getElementById('status').value
-        const inputroll = document.getElementById('markRoll').value
-        const { data } = await client
-            .from('Students')
-            .select('*')
-            .eq('RollNumber', inputroll)
-        if (data.length == 0) {
-            toastr.error('No student has been added with this roll number')
-            return;
-        } else {
-            const { data: getdata } = await client
-                .from('Attendance')
-                .select('date,RollNumber')
-                .eq('RollNumber', inputroll)
-            console.log(getdata);
-            const date = new Date().toLocaleDateString();
-            if (getdata.length == 0) {
-                const { data: addData } = await client
-                    .from('Attendance')
-                    .insert({ StdName: data[0].name, status: select, RollNumber: inputroll, date: date })
-                    .select('*')
-                toastr.success('Attendance Marked Succesfuly')
-                console.log(addData);
-                Swal.fire('Attendance Marked')
-            } else {
-                if (getdata[0].date == date) {
-                    toastr.info('I have marked your presence today')
-                    return;
-                } else {
-                    const { data: addData } = await client
-                        .from('Attendance')
-                        .insert({ StdName: data[0].name, status: select, RollNumber: inputroll, date: date })
-                        .select('*')
-                    toastr.success('Attendance Marked Succesfuly')
-                    console.log(addData);
-                    Swal.fire('Attendance Marked')
-                }
-            }
-        }
-    });
+    // Swal.fire({
+    //     title: "Mark Attendance",
+    //     confirmButtonText: 'Mark',
+    //     showCancelButton: true,
+    //     html: `
+    //         <input type="number" class="" id="markRoll" placeholder="Enter Roll Number">
+    //         <select id="status" class="swal2-input">
+    //         <option value="" selected disabled>Mark Attendance</option>
+    //         <option value="Present">Present</option>
+    //         <option value="Absent">Absent</option>
+    //         <option value="Leave">Leave</option>
+    //         </select>
+    //         `,
+    // }).then(async () => {
+        // const select = document.getElementById('status').value
+        // const inputroll = document.getElementById('markRoll').value
+    //     const { data } = await client
+    //         .from('Students')
+    //         .select('*')
+    //         .eq('RollNumber', inputroll)
+    //     if (data.length == 0) {
+    //         toastr.error('No student has been added with this roll number')
+    //         return;
+    //     } else {
+    //         const { data: getdata } = await client
+    //             .from('Attendance')
+    //             .select('date,RollNumber')
+    //             .eq('RollNumber', inputroll)
+    //         console.log(getdata);
+    //         const date = new Date().toLocaleDateString();
+    //         if (getdata.length == 0) {
+    //             const { data: addData } = await client
+    //                 .from('Attendance')
+    //                 .insert({ StdName: data[0].name, status: select, RollNumber: inputroll, date: date })
+    //                 .select('*')
+    //             toastr.success('Attendance Marked Succesfuly')
+    //             console.log(addData);
+    //             Swal.fire('Attendance Marked')
+    //         } else {
+    //             if (getdata[0].date == date) {
+    //                 toastr.info('I have marked your presence today')
+    //                 return;
+    //             } else {
+    //                 const { data: addData } = await client
+    //                     .from('Attendance')
+    //                     .insert({ StdName: data[0].name, status: select, RollNumber: inputroll, date: date })
+    //                     .select('*')
+    //                 toastr.success('Attendance Marked Succesfuly')
+    //                 console.log(addData);
+    //                 Swal.fire('Attendance Marked')
+    //             }
+    //         }
+    //     }
+    // });
 }
 
