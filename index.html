@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="style.css">
     <style>
 
@@ -40,8 +40,13 @@
                     onclick="checkstudents()">
                     <i class="fas fa-users"></i> View All Students
                 </button>
-                <button class="btn btn-danger animate__animated animate__fadeInUp animate__delay-3s" onclick="mark()">
-                    <i class="fas fa-users"></i> Mark Attendance
+                <button class="btn btn-danger animate__animated animate__fadeInUp animate__delay-3s"
+                    onclick="window.location.href='Attendance.html' ">
+                    <i class="fas fa-users"></i> Check Attendance
+                </button>
+                <button class="btn btn-primary animate__animated animate__fadeInUp animate__delay-4s"
+                    onclick="window.location.href='fee.html'">
+                    <i class="fas fa-users"></i> Check Fee
                 </button>
             </div>
         </div>
@@ -166,7 +171,7 @@
             </div>
         </div>
     </div>
-<script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

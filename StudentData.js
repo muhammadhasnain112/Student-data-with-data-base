@@ -273,9 +273,9 @@ document.getElementById('clearallfilters').addEventListener('click', async () =>
         .select('*');
     console.log(data);
     data.forEach(e => {
-        if(token){
+        if (token) {
             adminshowdata1(e)
-        }else{
+        } else {
             localusershowdata(e)
         }
     });

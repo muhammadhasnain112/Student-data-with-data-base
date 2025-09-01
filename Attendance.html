@@ -73,16 +73,28 @@
         .btn-primary {
             background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
             color: white;
+
         }
 
         .btn-secondary {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
+            outline: none;
         }
 
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        input {
+            color: white;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: white;
+
         }
 
         .btn:active {
@@ -197,20 +209,18 @@
             <button class="btn btn-secondary" onclick="showallAttend()">
                 <i class="fas fa-calendar-alt"></i> All Attendance Records
             </button>
+            <div>
+
+                <input type="text" id="num" placeholder="Enter Roll Number" class="btn-primary btn">
+            </div>
+            <button onclick="mark()" class="btn btn-secondary">Mark</button>
         </div>
 
         <div class="table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Roll Number</th>
-                    </tr>
+                <thead id="thead">
                 </thead>
                 <tbody id="tbody">
-                    <!-- Data will be populated here -->
                 </tbody>
             </table>
         </div>
@@ -226,6 +236,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
+        // console.log(navigator.onLine);
+        // if (!navigator.onLine) {
+        //     alert('Internet Connections Lost')
+        // } else {
+
         // Your existing JavaScript code with minor CSS class additions
         const supabaseUrl = 'https://ipoviueuhflhqjemgfkw.supabase.co'
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlwb3ZpdWV1aGZsaHFqZW1nZmt3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5Mzc5NzEsImV4cCI6MjA2ODUxMzk3MX0.ACNfp4MRa7-r1YYmu04VDltBo5UudrKWWw2NyDPBrk0'
@@ -244,6 +259,11 @@
             "hideMethod": "fadeOut"
         };
         const tbody = document.getElementById('tbody')
+        const thead = document.getElementById('thead')
+        const num = document.getElementById('num')
+
+        let today = new Date().toLocaleDateString()
+        // console.log(today);
 
         async function showattend() {
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Loading today's attendance...</td></tr>`
@@ -269,6 +289,8 @@
                 });
             }
 
+            setInterval(showattend, 24 * 60 * 60 * 1000);
+
             const { data } = await client
                 .from('Attendance')
                 .select('*')
@@ -281,23 +303,61 @@
 
             tbody.innerHTML = ``
             data.forEach(element => {
+                thead.innerHTML = ``
+                thead.innerHTML = `<tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Roll Number</th>
+                    </tr>`
                 const statusClass = `status-${element.status.toLowerCase()}`
                 tbody.innerHTML += `
                <tr>
                 <td>${element.date}</td>
                 <td>${element.StdName}</td>
-               <td>
-                 <select id="attend-${element.RollNumber}" onchange="status(${element.RollNumber}, this.value)" class="${statusClass}">
-                   <option value="" disabled selected>${element.status}</option>
-                   <option value="Absent">Absent</option>
-                   <option value="Present">Present</option>
-                   <option value="Leave">Leave</option>
-                 </select>
+               <td class="${statusClass}">
+               ${element.status}
                </td>
                 <td>${element.RollNumber}</td>
                </tr>`
+
             });
         }
+
+        async function mark() {
+            if (num.value == ``) {
+                toastr.info('Please Enter Roll Number')
+                num.value = ``
+                return;
+            }
+
+
+            const { data: checkattend } = await client
+                .from('Attendance')
+                .select('status')
+                .eq('RollNumber', num.value)
+                .eq('date', today)
+            console.log(checkattend[0].status);
+            if (checkattend[0].status == 'Present') {
+                toastr.info('Atendance Already Marked')
+                return;
+            }
+            const { data, error } = await client
+                .from('Attendance')
+                .update({ status: 'Present' })
+                .select('*')
+                .eq('RollNumber', num.value)
+                .eq('date', today)
+            console.log(data[0].status);
+            if (error) {
+                toastr.error(error.message)
+                return;
+            }
+            toastr.success('Attendance Marked')
+            num.value = ``
+            showattend()
+        }
+
 
         async function status(das, val) {
             const { error } = await client
@@ -308,38 +368,133 @@
             // Update the select element's class for styling
             const selectElement = document.getElementById(`attend-${das}`)
             selectElement.className = `status-${val.toLowerCase()}`
-
             toastr.success(`Attendance marked as ${val} for roll number ${das}`)
         }
 
         async function showallAttend() {
+            let rollnumbers = []
+            let studentName = []
+
             tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Loading all attendance records...</td></tr>`
             const { data } = await client
                 .from('Attendance')
                 .select('*')
 
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No attendance records found</td></tr>`
-                return
+
+            function makeSummary(attendance) {
+                const summary = {};
+
+                attendance.forEach(record => {
+                    const name = record.StdName;
+                    const roll = record.RollNumber
+                    if (!summary[name]) {
+                        summary[name] = { RollNumber: roll, total: 0, present: 0, absent: 0 };
+                    }
+
+                    summary[name].total++;
+                    if (record.status.toLowerCase() === "present") {
+                        summary[name].present++;
+                    } else {
+                        summary[name].absent++;
+                    }
+                });
+
+                return summary;
             }
 
+            const report = makeSummary(data);
+            console.log(report);
+            // report.forEach(element => {
+            //     console.log(element);
+
+            // });
+            thead.innerHTML = ``
+            thead.innerHTML = `<tr>
+                <th>Roll Number</th>
+                <th>Name</th>
+                <th>Classes</th>
+                <th>Presents</th>
+                <th>Absents</th>
+                </tr>
+                `
+            // data.forEach(element => {
+            //     console.log(element);
             tbody.innerHTML = ``
-            data.forEach(element => {
-                const statusClass = `status-${element.status.toLowerCase()}`
-                tbody.innerHTML += `
-               <tr>
-                <td>${element.date}</td>
-                <td>${element.StdName}</td>
-                <td class="${statusClass}">${element.status}</td>
-                <td>${element.RollNumber}</td>
-               </tr>`
-            });
+            for (let name in report) {
+                let stats = report[name];
+                let row = `<tr>       
+    <td>${stats.RollNumber}</td>
+    <td>${name}</td>
+    <td>${stats.total}</td>
+    <td>${stats.present}</td>
+    <td>${stats.absent}</td>
+  </tr>`;
+                tbody.innerHTML += row;
+            }
+            //     // console.log(element.status);
+            //     if (!rollnumbers.includes(element.RollNumber)) {
+            //         rollnumbers.push(element.RollNumber)
+            //         studentName.push(element.StdName)
+            //     }
+            // });
+            // console.log(allClasses.length)
+            // console.log(rollnumbers);
+            // console.log(studentName);
+            // rollnumbers.forEach(async element => {
+            //     // console.log(element);
+            //     // const { data } = await client
+            //     //     .from('Attendance')
+            //     //     .select('*')
+            //     //     .eq('RollNumber', element)
+            //     // console.log(data);
+
+            // });
+            // tbody.innerHTML = ``
+
+
+
+            // rollnumbers.forEach(async (element, i) => {
+            // const { data: attend } = await client
+            //     .from('Attendance')
+            //     .select('status')
+            //     .eq('RollNumber', element)
+
+            // attend.forEach(attendence => {
+            //     console.log(attendence);
+            //     if (attendence.status == 'Absent') {
+
+            //     }
+            // });
+
+            // console.log(attend[0]);
+            // console.log(attend);
+
+
+            // const statusClass = `status-${element.status.toLowerCase()}`
+
+            //     tbody.innerHTML += `
+            //    <tr>
+            //     <td>${element}</td>
+            //     <td>${studentName[i]}</td>
+            //     <td>${}</td>
+            //     <td>${attend}</td>
+
+            //    </tr>`
+            // });
+
+
+            // if (data.length === 0) {
+            //     tbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">No attendance records found</td></tr>`
+            //     return
+            // }
+
         }
 
         // Load today's attendance by default when page loads
         document.addEventListener('DOMContentLoaded', function () {
             showattend();
         });
+        // }
     </script>
 </body>
 
